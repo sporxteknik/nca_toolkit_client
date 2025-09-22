@@ -1,0 +1,318 @@
+/* Main stylesheet for NCA Toolkit PHP Client */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f5f5f5;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+header h1 {
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+header p {
+    color: #7f8c8d;
+    font-size: 1.1em;
+}
+
+.endpoint-selector {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.endpoint-selector label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.endpoint-selector select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    background-color: #fff;
+}
+
+.endpoint-form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+    display: none;
+}
+
+.endpoint-form h2 {
+    color: #2c3e50;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    font-family: inherit;
+}
+
+.form-group textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+/* Drag and drop styles */
+.drop-area {
+    border: 2px dashed #3498db;
+    border-radius: 4px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    background-color: #f8f9fa;
+    margin-top: 10px;
+}
+
+.drop-area:hover {
+    background-color: #e3f2fd;
+}
+
+.drop-area.highlight {
+    border-color: #2980b9;
+    background-color: #d6eaf8;
+}
+
+.drop-area p {
+    margin: 0;
+    color: #7f8c8d;
+    font-size: 16px;
+}
+
+.file-list {
+    margin-top: 10px;
+}
+
+.file-item {
+    padding: 8px;
+    background-color: #e3f2fd;
+    border-radius: 4px;
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.file-name {
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.file-size {
+    color: #7f8c8d;
+    font-size: 14px;
+}
+
+.btn {
+    background-color: #3498db;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn:hover {
+    background-color: #2980b9;
+}
+
+.result {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.result h3 {
+    color: #2c3e50;
+    margin-bottom: 15px;
+}
+
+.download-result {
+    text-align: center;
+    padding: 20px;
+}
+
+.download-result h4 {
+    color: #27ae60;
+    margin-bottom: 15px;
+}
+
+.download-result p {
+    margin-bottom: 10px;
+}
+
+.download-result .btn {
+    margin-top: 15px;
+    background-color: #27ae60;
+}
+
+.download-result .btn:hover {
+    background-color: #219653;
+}
+
+/* Drop area styles */
+.drop-area {
+    border: 2px dashed #3498db;
+    border-radius: 4px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    background-color: #f8f9fa;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.drop-area:hover {
+    background-color: #e3f2fd;
+}
+
+.drop-area.highlight {
+    border-color: #2980b9;
+    background-color: #d6eaf8;
+}
+
+.drop-area p {
+    margin: 0;
+    color: #7f8c8d;
+    font-size: 16px;
+}
+
+.file-list {
+    margin-top: 10px;
+}
+
+.file-item {
+    padding: 8px;
+    background-color: #e3f2fd;
+    border-radius: 4px;
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.file-name {
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.file-size {
+    color: #7f8c8d;
+    font-size: 14px;
+}
+
+.result pre {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 4px;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+/* Loading animation */
+.loading {
+    display: none;
+    text-align: center;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-top: 20px;
+}
+
+.spinner {
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #3498db;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
+
+.loading-text {
+    font-size: 18px;
+    color: #2c3e50;
+    margin: 0;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+    
+    header h1 {
+        font-size: 1.8em;
+    }
+    
+    .endpoint-selector,
+    .endpoint-form,
+    .result,
+    .loading {
+        padding: 15px;
+    }
+}

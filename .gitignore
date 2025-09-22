@@ -1,0 +1,71 @@
+# Dependencies
+node_modules/
+vendor/
+
+# Environment variables
+.env
+.env.local
+.env.production
+
+# Logs
+logs/
+*.log
+
+# Temporary files
+temp/
+tmp/
+*.tmp
+*.temp
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Docker
+.dockerignore
+
+# Composer
+composer.lock
+
+# NPM
+package-lock.json
+yarn.lock
+
+# Playwright
+playwright-report/
+test-results/
+
+# Cache directories
+.cache/
+/var/www/.cache/
+
+# Uploaded files directory (if used)
+uploads/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# PHPUnit
+.phpunit.result.cache
+
+# Runtime files
+*.pid
+*.sock
+
+# Coverage reports
+coverage/
+
+# Sensitive credential files
+temp/*.json
+*.json
