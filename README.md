@@ -28,6 +28,14 @@ This PHP client for the NCA Toolkit API is containerized using Docker for easy d
 
 4. Access the application in your browser at `http://localhost:8081`
 
+## Alternative: Pass API Key Directly
+
+If you prefer not to use an `.env` file, you can pass the API key directly as an environment variable:
+
+```bash
+NCA_API_KEY=your_actual_api_key_here docker-compose up -d
+```
+
 ## Quick Start with Docker Only
 
 1. Build the Docker image:
@@ -46,7 +54,11 @@ This PHP client for the NCA Toolkit API is containerized using Docker for easy d
 
 - `NCA_API_BASE_URL`: Base URL for the NCA Toolkit API (default: https://no-code-architects-toolkit-18628757896.europe-west1.run.app)
 - `NCA_API_KEY`: Your API key for the NCA Toolkit (required)
-- `NCA_API_TIMEOUT`: API timeout in seconds (default: 30)
+- `NCA_API_TIMEOUT`: API timeout in seconds (default: 300)
+- `GOOGLE_APPLICATION_CREDENTIALS`: Path to Google Cloud service account key file (optional)
+- `GCS_BUCKET_NAME`: Google Cloud Storage bucket name (default: maksimum-nca)
+
+These can be set in the `.env` file or passed directly as environment variables when running docker-compose.
 
 ## Available Endpoints
 
