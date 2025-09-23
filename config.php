@@ -11,7 +11,7 @@ if (file_exists(__DIR__ . '/.env')) {
 
 // Base URL for the NCA Toolkit API
 // Use environment variable if set, otherwise use default
-define('NCA_API_BASE_URL', getenv('NCA_API_BASE_URL') ?: 'https://no-code-architects-toolkit-18628757896.europe-west1.run.app');
+define('NCA_API_BASE_URL', getenv('NCA_API_BASE_URL') ?: '');
 
 // API key - use environment variable if set, otherwise use default
 define('NCA_API_KEY', getenv('NCA_API_KEY') ?: 'YOUR_API_KEY_HERE');
@@ -21,5 +21,6 @@ define('NCA_API_TIMEOUT', getenv('NCA_API_TIMEOUT') ?: 300);
 
 // GCP Storage configuration
 define('GOOGLE_APPLICATION_CREDENTIALS', getenv('GOOGLE_APPLICATION_CREDENTIALS') ?: '');
-define('GCS_BUCKET_NAME', getenv('GCS_BUCKET_NAME') ?: 'maksimum-nca');
+define('GCS_BUCKET_NAME', getenv('GCS_BUCKET_NAME') ?: '');
+define('GCS_DATA_BUCKET_NAME', getenv('GCS_DATA_BUCKET_NAME') ?: '');
 ?>

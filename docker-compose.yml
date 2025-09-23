@@ -6,7 +6,7 @@ services:
     ports:
       - "8081:80"
     environment:
-      - NCA_API_BASE_URL=https://no-code-architects-toolkit-18628757896.europe-west1.run.app
+      - NCA_API_BASE_URL=${NCA_API_BASE_URL:-https://no-code-architects-toolkit-18628757896.europe-west1.run.app}
       - NCA_API_KEY=${NCA_API_KEY}
     volumes:
       - ./config.php:/var/www/html/config.php
@@ -14,3 +14,4 @@ services:
       - ./css:/var/www/html/css
       - ./js:/var/www/html/js
       - ./index.php:/var/www/html/index.php
+      - ./test_files:/var/www/html/test_files

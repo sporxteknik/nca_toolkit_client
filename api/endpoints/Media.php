@@ -110,16 +110,23 @@ class Media {
      * 
      * @param string $mediaUrl URL of the media to transcribe
      * @param bool $translate Whether to translate the transcription
+     * @param bool $useCloudUrl Whether to request a cloud URL for the SRT file
      * @return array API response
      */
-    public function transcribeToSrt($mediaUrl, $translate = false) {
+    public function transcribeToSrt($mediaUrl, $translate = false, $useCloudUrl = false) {
         $options = [
             'task' => 'transcribe',
-            'include_text' => false,
+            'include_text' => true,  // Changed to true to match working Postman request
             'include_srt' => true,
             'include_segments' => false,
             'word_timestamps' => false
         ];
+        
+        // Add cloud URL option if requested
+        if ($useCloudUrl) {
+            $options['response_type'] = 'cloud';
+            $options['id'] = '1';  // Add ID parameter to match working Postman request
+        }
         
         return $this->transcribe($mediaUrl, $translate, $options);
     }

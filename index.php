@@ -78,27 +78,55 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Debug output
             error_log("Files to upload: " . print_r($filesToUpload, true));
             
-            if (count($filesToUpload) === 1) {
-                $uploadResult = $gcsUploader->uploadFile($filesToUpload[0]['path'], $filesToUpload[0]['name']);
-                if ($uploadResult['success']) {
-                    $uploadedFiles = ['success' => true, 'url' => $uploadResult['url']];
+            if ($endpoint === 'file_upload') {
+                // Use the data bucket for file uploads
+                if (count($filesToUpload) === 1) {
+                    $uploadResult = $gcsUploader->uploadFileToDataBucket($filesToUpload[0]['path'], $filesToUpload[0]['name']);
+                    if ($uploadResult['success']) {
+                        $uploadedFiles = ['success' => true, 'url' => $uploadResult['url'], 'file_name' => $uploadResult['file_name']];
+                    } else {
+                        $result = [
+                            'success' => false,
+                            'error' => 'File upload failed: ' . $uploadResult['error']
+                        ];
+                    }
                 } else {
-                    $result = [
-                        'success' => false,
-                        'error' => 'File upload failed: ' . $uploadResult['error']
-                    ];
+                    $uploadResult = $gcsUploader->uploadMultipleFilesToDataBucket($filesToUpload);
+                    // Debug output
+                    error_log("Upload result: " . print_r($uploadResult, true));
+                    if ($uploadResult['success']) {
+                        $uploadedFiles = $uploadResult;
+                    } else {
+                        $result = [
+                            'success' => false,
+                            'error' => 'File upload failed: ' . $uploadResult['error']
+                        ];
+                    }
                 }
             } else {
-                $uploadResult = $gcsUploader->uploadMultipleFiles($filesToUpload);
-                // Debug output
-                error_log("Upload result: " . print_r($uploadResult, true));
-                if ($uploadResult['success']) {
-                    $uploadedFiles = $uploadResult;
+                // Use the default bucket for other endpoints
+                if (count($filesToUpload) === 1) {
+                    $uploadResult = $gcsUploader->uploadFile($filesToUpload[0]['path'], $filesToUpload[0]['name']);
+                    if ($uploadResult['success']) {
+                        $uploadedFiles = ['success' => true, 'url' => $uploadResult['url']];
+                    } else {
+                        $result = [
+                            'success' => false,
+                            'error' => 'File upload failed: ' . $uploadResult['error']
+                        ];
+                    }
                 } else {
-                    $result = [
-                        'success' => false,
-                        'error' => 'File upload failed: ' . $uploadResult['error']
-                    ];
+                    $uploadResult = $gcsUploader->uploadMultipleFiles($filesToUpload);
+                    // Debug output
+                    error_log("Upload result: " . print_r($uploadResult, true));
+                    if ($uploadResult['success']) {
+                        $uploadedFiles = $uploadResult;
+                    } else {
+                        $result = [
+                            'success' => false,
+                            'error' => 'File upload failed: ' . $uploadResult['error']
+                        ];
+                    }
                 }
             }
         }
@@ -239,15 +267,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 $mediaUrl = $_POST['media_url'];
             }
-            $translate = isset($_POST['translate']);
             $srtFormat = isset($_POST['srt_format']);
+            $directOutput = isset($_POST['direct_output']);
+            
+            // Store the direct output preference in a global variable so we can use it in the display section
+            $GLOBALS['transcribe_direct_output'] = $directOutput;
             
             if ($srtFormat) {
-                // Use the SRT transcription method
-                $result = $media->transcribeToSrt($mediaUrl, $translate);
+                // Use the SRT transcription method without translation
+                // If user doesn't want direct output, request a cloud URL for the SRT file
+                $useCloudUrl = !$directOutput;
+                $result = $media->transcribeToSrt($mediaUrl, false, $useCloudUrl);
             } else {
-                // Use the regular transcription method
-                $result = $media->transcribe($mediaUrl, $translate);
+                // Use the regular transcription method without translation
+                $result = $media->transcribe($mediaUrl, false);
             }
             break;
             
@@ -286,12 +319,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 $videoUrl = $_POST['video_url'];
             }
-            // For now, we'll ignore the caption text as the API doesn't accept it
-            // The API may add captions automatically
-            // We can pass formatting options through the settings
+            
+            // Prepare options for the API request
             $options = [];
             
-            // Add settings based on form input, but only include supported ones
+            // Check if an SRT URL was provided
+            if (!empty($_POST['srt_url'])) {
+                $options['captions'] = $_POST['srt_url'];
+            } elseif (!empty($_POST['caption_text'])) {
+                // Only add caption text if no SRT URL was provided
+                $options['captions'] = $_POST['caption_text'];
+            }
+            
+            // Add settings based on form input
             $settings = [];
             if (!empty($_POST['position'])) {
                 $settings['position'] = $_POST['position'];
@@ -302,11 +342,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (!empty($_POST['font_family'])) {
                 $settings['font_family'] = $_POST['font_family'];
             }
+            if (!empty($_POST['style'])) {
+                $settings['style'] = $_POST['style'];
+            }
+            if (!empty($_POST['line_color'])) {
+                $settings['line_color'] = $_POST['line_color'];
+            }
+            if (!empty($_POST['outline_color'])) {
+                $settings['outline_color'] = $_POST['outline_color'];
+            }
+            if (!empty($_POST['word_color'])) {
+                $settings['word_color'] = $_POST['word_color'];
+            }
+            
+            // Debug output to see what settings are being sent
+            error_log("Caption settings: " . print_r($settings, true));
             
             // Only add settings if we have any
             if (!empty($settings)) {
                 $options['settings'] = $settings;
             }
+            
+            error_log("Caption options: " . print_r($options, true));
             
             $result = $video->addCaption($videoUrl, $options);
             break;
@@ -429,6 +486,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $end = (float)$_POST['end'];
             $result = $video->trim($videoUrl, $start, $end);
             break;
+            
+        // File Upload endpoint
+        case 'file_upload':
+            // Handle file uploads to GCP Storage (maksimum-data bucket)
+            if (!empty($uploadedFiles)) {
+                if ($uploadedFiles['success']) {
+                    // Return the uploaded file URLs
+                    $result = $uploadedFiles;
+                } else {
+                    $result = $uploadedFiles;
+                }
+            } else {
+                $result = [
+                    'success' => false,
+                    'error' => 'No files were uploaded'
+                ];
+            }
+            break;
         }
     }
 }
@@ -477,6 +552,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <option value="video_cut">Cut Video</option>
                         <option value="video_split">Split Video</option>
                         <option value="video_trim">Trim Video</option>
+                    </optgroup>
+                    <optgroup label="File Upload">
+                        <option value="file_upload">Upload to GCP Storage</option>
                     </optgroup>
                 </select>
             </div>
@@ -546,11 +624,63 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 </ul>
                             <?php endif; ?>
                         </div>
-                    <?php elseif ($endpoint === 'media_transcribe' && isset($_POST['srt_format']) && $result['success'] && isset($result['data']['response']['srt'])): ?>
-                        <div class="transcription-result">
-                            <h4>Transcription (SRT Format)</h4>
-                            <textarea style="width: 100%; height: 300px; font-family: monospace;"><?php echo htmlspecialchars($result['data']['response']['srt']); ?></textarea>
-                            <p><a href="data:text/plain;charset=utf-8,<?php echo urlencode($result['data']['response']['srt']); ?>" download="transcription.srt" class="btn">Download SRT File</a></p>
+                    <?php elseif ($endpoint === 'media_transcribe' && isset($_POST['srt_format']) && $result['success'] && isset($result['data']['response'])): ?>
+                        <?php if (!isset($GLOBALS['transcribe_direct_output']) || $GLOBALS['transcribe_direct_output']): ?>
+                            <div class="transcription-result">
+                                <h4>Transcription (SRT Format)</h4>
+                                <?php if (isset($result['data']['response']['srt_url']) && !empty($result['data']['response']['srt_url'])): ?>
+                                    <p><a href="<?php echo htmlspecialchars($result['data']['response']['srt_url']); ?>" download="transcription.srt" class="btn">Download SRT File</a></p>
+                                    <p><strong>Direct URL:</strong></p>
+                                    <input type="text" style="width: 100%;" readonly value="<?php echo htmlspecialchars($result['data']['response']['srt_url']); ?>">
+                                    <p><small>Note: This is a direct URL to the SRT file hosted on cloud storage.</small></p>
+                                <?php elseif (isset($result['data']['response']['srt']) && !empty($result['data']['response']['srt'])): ?>
+                                    <textarea style="width: 100%; height: 300px; font-family: monospace;"><?php echo htmlspecialchars($result['data']['response']['srt']); ?></textarea>
+                                    <?php 
+                                    // Create the data URL for download
+                                    $dataUrl = "data:text/plain;charset=utf-8," . urlencode($result['data']['response']['srt']);
+                                    ?>
+                                    <p><a href="<?php echo $dataUrl; ?>" download="transcription.srt" class="btn">Download SRT File</a></p>
+                                    <p><strong>Direct URL:</strong></p>
+                                    <input type="text" style="width: 100%;" readonly value="<?php echo $dataUrl; ?>">
+                                    <p><small>Note: Direct SRT URL not provided by API, using data URL instead.</small></p>
+                                <?php endif; ?>
+                            </div>
+                        <?php else: ?>
+                            <div class="download-result">
+                                <h4>Transcription Complete</h4>
+                                <?php if (isset($result['data']['response']['srt_url']) && !empty($result['data']['response']['srt_url'])): ?>
+                                    <p><a href="<?php echo htmlspecialchars($result['data']['response']['srt_url']); ?>" download="transcription.srt" class="btn">Download SRT File</a></p>
+                                    <p><strong>Direct URL:</strong></p>
+                                    <input type="text" style="width: 100%;" readonly value="<?php echo htmlspecialchars($result['data']['response']['srt_url']); ?>">
+                                    <p><small>Note: This is a direct URL to the SRT file hosted on cloud storage.</small></p>
+                                <?php elseif (isset($result['data']['response']['srt']) && !empty($result['data']['response']['srt'])): ?>
+                                    <?php 
+                                    // Create the data URL for download
+                                    $dataUrl = "data:text/plain;charset=utf-8," . urlencode($result['data']['response']['srt']);
+                                    ?>
+                                    <p><a href="<?php echo $dataUrl; ?>" download="transcription.srt" class="btn">Download SRT File</a></p>
+                                    <p><strong>Direct URL:</strong></p>
+                                    <input type="text" style="width: 100%;" readonly value="<?php echo $dataUrl; ?>">
+                                    <p><small>Note: Direct SRT URL not provided by API, using data URL instead.</small></p>
+                                <?php endif; ?>
+                            </div>
+                        <?php endif; ?>
+                    <?php elseif ($endpoint === 'file_upload' && $result['success']): ?>
+                        <div class="download-result">
+                            <h4>File Upload Successful!</h4>
+                            <?php if (isset($result['url'])): ?>
+                                <p><strong>File URL:</strong> <a href="<?php echo htmlspecialchars($result['url']); ?>" target="_blank"><?php echo htmlspecialchars($result['url']); ?></a></p>
+                                <p><strong>File Name:</strong> <?php echo htmlspecialchars($result['file_name']); ?></p>
+                            <?php elseif (isset($result['files']) && is_array($result['files'])): ?>
+                                <p><strong>Uploaded Files:</strong></p>
+                                <ul>
+                                    <?php foreach ($result['files'] as $file): ?>
+                                        <li>
+                                            <a href="<?php echo htmlspecialchars($file['url']); ?>" target="_blank"><?php echo htmlspecialchars($file['file_name']); ?></a>
+                                        </li>
+                                    <?php endforeach; ?>
+                                </ul>
+                            <?php endif; ?>
                         </div>
                     <?php else: ?>
                         <pre><?php echo htmlspecialchars(json_encode($result, JSON_PRETTY_PRINT)); ?></pre>
@@ -560,6 +690,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </main>
     </div>
     
-    <script src="js/script.js"></script>
+    <script src="js/script.js?v=1.1"></script>
 </body>
 </html>

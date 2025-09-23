@@ -12,11 +12,13 @@ class Video {
     /**
      * Add captions to video
      * 
-     * Note: The API may not accept caption text parameters directly.
-     * Some implementations may add captions automatically or through a different method.
+     * Supports both raw caption text and external SRT file URLs.
+     * Also supports color customization for captions.
      * 
      * @param string $videoUrl URL of the video
-     * @param array $options Additional options (use with caution as some may be rejected)
+     * @param array $options Additional options
+     *   - captions: URL to an external SRT file (optional)
+     *   - settings: Array of caption settings including colors (optional)
      * @return array API response
      */
     public function addCaption($videoUrl, $options = []) {
@@ -24,9 +26,14 @@ class Video {
             'video_url' => $videoUrl
         ];
         
-        // Only merge user options, don't add default settings that might not be supported
-        if (!empty($options)) {
-            $data = array_merge($data, $options);
+        // Add captions parameter if provided (for external SRT files)
+        if (!empty($options['captions'])) {
+            $data['captions'] = $options['captions'];
+        }
+        
+        // Add settings if provided
+        if (!empty($options['settings'])) {
+            $data['settings'] = $options['settings'];
         }
         
         // For caption requests, we might need a longer timeout
