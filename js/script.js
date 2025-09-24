@@ -2,11 +2,51 @@
 
 // Translation function
 function translate(key) {
-    // Use the translations object from PHP if available, otherwise return the key
-    if (typeof translations !== 'undefined' && translations[key]) {
-        return translations[key];
+    // ... translation code ...
+    return translations[key] || key;
+}
+
+// Function to convert HH:MM:SS format to seconds
+function timeToSeconds(timeStr) {
+    if (!timeStr) return 0;
+    
+    const parts = timeStr.split(':');
+    if (parts.length !== 3) {
+        // If not in HH:MM:SS format, try MM:SS
+        const shortParts = timeStr.split(':');
+        if (shortParts.length === 2) {
+            return parseInt(shortParts[0]) * 60 + parseInt(shortParts[1]);
+        }
+        return 0;
     }
-    return key;
+    
+    const hours = parseInt(parts[0]) || 0;
+    const minutes = parseInt(parts[1]) || 0;
+    const seconds = parseInt(parts[2]) || 0;
+    
+    return hours * 3600 + minutes * 60 + seconds;
+}
+
+// Function to add a new segment row
+function addSegmentRow(containerId) {
+    const container = document.getElementById(containerId);
+    const newRow = document.createElement('div');
+    newRow.className = 'segment-row';
+    newRow.innerHTML = `
+        <input type="text" class="time-input" name="start_times[]" placeholder="${translate('start_time')} (HH:MM:SS)" required>
+        <span class="time-separator">-</span>
+        <input type="text" class="time-input" name="end_times[]" placeholder="${translate('end_time')} (HH:MM:SS)" required>
+        <button type="button" class="btn remove-segment" onclick="removeSegmentRow(this)">${translate('remove_segment')}</button>
+    `;
+    container.appendChild(newRow);
+}
+
+// Function to remove a segment row
+function removeSegmentRow(button) {
+    const container = button.parentElement;
+    if (container.parentElement.children.length > 1) {
+        container.remove();
+    }
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -705,8 +745,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="file-list" id="cut-file-list"></div>
             </div>
             <div class="form-group">
-                <label for="segments">${translate('segments_json')}</label>
-                <textarea id="segments" name="segments" placeholder='${translate('segments_placeholder')}'></textarea>
+                <label>${translate('segments')}</label>
+                <div id="segments-container">
+                    <div class="segment-row">
+                        <input type="text" class="time-input" name="start_times[]" placeholder="${translate('start_time')} (HH:MM:SS)" required>
+                        <span class="time-separator">-</span>
+                        <input type="text" class="time-input" name="end_times[]" placeholder="${translate('end_time')} (HH:MM:SS)" required>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-secondary" onclick="addSegmentRow('segments-container')">${translate('add_segment')}</button>
             </div>
             <input type="hidden" name="endpoint" value="video_cut">
             <button type="submit" class="btn">${translate('cut_video')}</button>
@@ -756,8 +803,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="file-list" id="split-file-list"></div>
             </div>
             <div class="form-group">
-                <label for="segments">${translate('segments_json')}</label>
-                <textarea id="segments" name="segments" placeholder='${translate('split_segments_placeholder')}'></textarea>
+                <label>${translate('segments')}</label>
+                <div id="segments-container">
+                    <div class="segment-row">
+                        <input type="text" class="time-input" name="start_times[]" placeholder="${translate('start_time')} (HH:MM:SS)" required>
+                        <span class="time-separator">-</span>
+                        <input type="text" class="time-input" name="end_times[]" placeholder="${translate('end_time')} (HH:MM:SS)" required>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-secondary" onclick="addSegmentRow('segments-container')">${translate('add_segment')}</button>
             </div>
             <input type="hidden" name="endpoint" value="video_split">
             <button type="submit" class="btn">${translate('split_video')}</button>

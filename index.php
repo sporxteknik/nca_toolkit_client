@@ -12,6 +12,27 @@ require_once 'api/GcsUploader.php';
 // Initialize language manager
 $languageManager = new LanguageManager();
 
+// Helper function to convert HH:MM:SS format to seconds
+function timeToSeconds($timeStr) {
+    if (!$timeStr) return 0;
+    
+    $parts = explode(':', $timeStr);
+    if (count($parts) !== 3) {
+        // If not in HH:MM:SS format, try MM:SS
+        $shortParts = explode(':', $timeStr);
+        if (count($shortParts) === 2) {
+            return (int)$shortParts[0] * 60 + (int)$shortParts[1];
+        }
+        return 0;
+    }
+    
+    $hours = (int)$parts[0];
+    $minutes = (int)$parts[1];
+    $seconds = (int)$parts[2];
+    
+    return $hours * 3600 + $minutes * 60 + $seconds;
+}
+
 // Check if language change request
 if (isset($_GET['lang'])) {
     $languageManager->setCurrentLanguage($_GET['lang']);
@@ -463,7 +484,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 $videoUrl = $_POST['video_url'];
             }
-            $segments = json_decode($_POST['segments'], true);
+            
+            // Convert time inputs to segments array
+            $startTimes = $_POST['start_times'] ?? [];
+            $endTimes = $_POST['end_times'] ?? [];
+            
+            $segments = [];
+            for ($i = 0; $i < count($startTimes); $i++) {
+                $start = $startTimes[$i];
+                $end = $endTimes[$i];
+                
+                // Convert HH:MM:SS format to seconds
+                $startSeconds = timeToSeconds($start);
+                $endSeconds = timeToSeconds($end);
+                
+                $segments[] = [
+                    'start' => $startSeconds,
+                    'end' => $endSeconds
+                ];
+            }
+            
             $result = $video->cut($videoUrl, $segments);
             break;
             
@@ -483,7 +523,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 $videoUrl = $_POST['video_url'];
             }
-            $segments = json_decode($_POST['segments'], true);
+            
+            // Convert time inputs to segments array
+            $startTimes = $_POST['start_times'] ?? [];
+            $endTimes = $_POST['end_times'] ?? [];
+            
+            $segments = [];
+            for ($i = 0; $i < count($startTimes); $i++) {
+                $start = $startTimes[$i];
+                $end = $endTimes[$i];
+                
+                // Convert HH:MM:SS format to seconds
+                $startSeconds = timeToSeconds($start);
+                $endSeconds = timeToSeconds($end);
+                
+                $segments[] = [
+                    'start' => $startSeconds,
+                    'end' => $endSeconds
+                ];
+            }
+            
             $result = $video->split($videoUrl, $segments);
             break;
             
