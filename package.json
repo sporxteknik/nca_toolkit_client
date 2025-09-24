@@ -1,0 +1,22 @@
+{
+  "name": "nca_client",
+  "version": "1.0.0",
+  "description": "This PHP client for the NCA Toolkit API is containerized using Docker for easy deployment and testing.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "npx playwright test",
+    "test:ui": "npx playwright test --headed",
+    "test:debug": "npx playwright test --debug",
+    "test:report": "npx playwright show-report"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.55.0"
+  }
+}

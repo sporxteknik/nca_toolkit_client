@@ -65,7 +65,3 @@ Thumbs.db
 
 # Coverage reports
 coverage/
-
-# Sensitive credential files
-temp/*.json
-*.json
