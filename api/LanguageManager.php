@@ -72,6 +72,7 @@ class LanguageManager {
                 'drag_drop_download' => 'Drag & drop a media file here or click to select file',
                 'cookies_optional' => 'Cookies (optional):',
                 'cookies_placeholder' => 'Paste cookies here for authenticated downloads (e.g., YouTube)',
+                'youtube_cookies_note' => 'Note: For YouTube downloads, you may need to provide cookies from your browser to bypass bot detection. See documentation for how to export cookies.',
                 'download_media' => 'Download Media',
                 
                 'drag_drop_transcribe' => 'Drag & drop a media file here or click to select file',
@@ -245,6 +246,8 @@ class LanguageManager {
                 'youtube_download_tips_2' => 'For age-restricted or private videos, you may need to provide cookies',
                 'youtube_download_tips_3' => 'Larger videos may take longer to download and process',
                 'youtube_download_tips_4' => 'YouTube may have rate limiting or blocking mechanisms for automated downloads',
+                'youtube_bot_detection' => 'YouTube bot detection: YouTube increasingly blocks automated access. To bypass this, provide cookies from your browser.',
+                'youtube_cookies_howto' => 'How to export cookies: Install a browser extension like "Get cookies.txt" for Chrome/Firefox, log into YouTube in your browser, then export cookies for youtube.com and paste them in the cookies field.',
                 
                 // YouTube info documentation
                 'about_youtube_info' => 'About Get YouTube Video Info',
@@ -509,6 +512,7 @@ class LanguageManager {
                 'drag_drop_download' => 'Bir medya dosyasını buraya sürükleyip bırakın veya seçmek için tıklayın',
                 'cookies_optional' => 'Çerezler (isteğe bağlı):',
                 'cookies_placeholder' => 'Kimliği doğrulanmış indirmeler için çerezleri buraya yapıştırın (örn. YouTube)',
+                'youtube_cookies_note' => 'Not: YouTube indirmeleri için bot tespitini atlatmak amacıyla tarayıcınızdan çerezlerinizi sağlamanız gerekebilir. Çerezleri nasıl dışa aktaracağınızı belgelerden görün.',
                 'download_media' => 'Medya İndir',
                 
                 'drag_drop_transcribe' => 'Bir medya dosyasını buraya sürükleyip bırakın veya seçmek için tıklayın',
@@ -682,6 +686,8 @@ class LanguageManager {
                 'youtube_download_tips_2' => 'Yaş kısıtlamalı veya özel videolar için çerezler sağlamanız gerekebilir',
                 'youtube_download_tips_3' => 'Daha büyük videoların indirilmesi ve işlenmesi daha uzun sürebilir',
                 'youtube_download_tips_4' => 'YouTube, otomatik indirmeler için oran sınırlaması veya engelleme mekanizmalarına sahip olabilir',
+                'youtube_bot_detection' => 'YouTube bot tespiti: YouTube otomatik erişimi artan şekilde engelliyor. Bunu atlatmak için tarayıcınızdan çerezleri sağlayın.',
+                'youtube_cookies_howto' => 'Çerezleri dışa aktarma nasıl yapılır: Chrome/Firefox için \"Get cookies.txt\" gibi bir tarayıcı uzantısı yükleyin, tarayıcınızda YouTube\'da oturum açın, ardından youtube.com için çerezleri dışa aktarın ve çerezler alanına yapıştırın.',
                 
                 // YouTube info documentation
                 'about_youtube_info' => 'YouTube Video Bilgisi Alma Hakkında',

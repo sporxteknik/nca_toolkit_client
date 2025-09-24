@@ -406,6 +406,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="form-group">
                 <label for="cookies">${translate('cookies_optional')}</label>
                 <textarea id="cookies" name="cookies" placeholder="${translate('youtube_cookies_placeholder')}"></textarea>
+                <small>${translate('youtube_cookies_note')}</small>
             </div>
             <input type="hidden" name="endpoint" value="youtube_download">
             <button type="submit" class="btn">${translate('download_youtube')}</button>
@@ -432,6 +433,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         <li>${translate('youtube_download_tips_2')}</li>
                         <li>${translate('youtube_download_tips_3')}</li>
                         <li>${translate('youtube_download_tips_4')}</li>
+                        <li>${translate('youtube_bot_detection')}</li>
+                        <li>${translate('youtube_cookies_howto')}</li>
                     </ul>
                 </div>
             </div>
@@ -480,6 +483,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         <li>${translate('youtube_info_tips_2')}</li>
                         <li>${translate('youtube_info_tips_3')}</li>
                         <li>${translate('youtube_info_tips_4')}</li>
+                        <li>${translate('youtube_bot_detection')}</li>
+                        <li>${translate('youtube_cookies_howto')}</li>
                     </ul>
                 </div>
             </div>
