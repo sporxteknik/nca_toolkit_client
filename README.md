@@ -54,11 +54,34 @@ NCA_API_KEY=your_actual_api_key_here docker-compose up -d
 
 - `NCA_API_BASE_URL`: Base URL for the NCA Toolkit API (default: https://no-code-architects-toolkit-18628757896.europe-west1.run.app)
 - `NCA_API_KEY`: Your API key for the NCA Toolkit (required)
-- `NCA_API_TIMEOUT`: API timeout in seconds (default: 300)
-- `GOOGLE_APPLICATION_CREDENTIALS`: Path to Google Cloud service account key file (optional)
+- `NCA_API_TIMEOUT`: API timeout in seconds (default: 600, recommended for video processing operations)
+- `GOOGLE_APPLICATION_CREDENTIALS`: Path to Google Cloud service account key file (required for file upload features)
 - `GCS_BUCKET_NAME`: Google Cloud Storage bucket name (default: maksimum-nca)
+- `GCS_DATA_BUCKET_NAME`: Google Cloud Storage data bucket name for file uploads (default: maksimum-data)
 
 These can be set in the `.env` file or passed directly as environment variables when running docker-compose.
+
+## Google Cloud Storage Configuration
+
+The application uses Google Cloud Storage for file uploads. To enable file upload features, follow these steps:
+
+1. Create a Google Cloud project (or use an existing one)
+2. Enable the Cloud Storage API for your project
+3. Create a service account and download the JSON key file
+4. Create two Cloud Storage buckets:
+   - A general bucket for temporary files (default: `maksimum-nca`)
+   - A data bucket for user uploads (default: `maksimum-data`)
+5. Ensure the service account has the following roles on the buckets:
+   - `Storage Object Admin` (or `Storage Legacy Bucket Owner` for fine-grained access)
+6. Set up your `.env` file with the paths and credentials:
+   ```env
+   NCA_API_KEY=your_actual_api_key_here
+   GOOGLE_APPLICATION_CREDENTIALS=/path/to/your/service-account-key.json
+   GCS_BUCKET_NAME=your-gcs-bucket-name
+   GCS_DATA_BUCKET_NAME=your-gcs-data-bucket-name
+   ```
+   
+If you don't configure GCS credentials, the file upload endpoints will return an error message explaining that GCS is not configured, but other API functions will continue to work normally.
 
 ## Available Endpoints
 

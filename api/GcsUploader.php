@@ -12,15 +12,52 @@ class GcsUploader {
         $this->bucketName = getenv('GCS_BUCKET_NAME') ?: 'maksimum-nca';
         $this->dataBucketName = getenv('GCS_DATA_BUCKET_NAME') ?: 'maksimum-data';
         
+        $credentialsPath = getenv('GOOGLE_APPLICATION_CREDENTIALS');
+        
+        // If credentials path is set, resolve it properly for container environment
+        if ($credentialsPath) {
+            // Check if it's an absolute path or relative path
+            if (!file_exists($credentialsPath)) {
+                // If the path doesn't exist as provided, try to resolve it relative to the current working directory
+                // This should work for both local and container environments
+                $resolvedPath = $_SERVER['DOCUMENT_ROOT'] . '/../' . $credentialsPath;
+                if (file_exists($resolvedPath)) {
+                    $credentialsPath = $resolvedPath;
+                } else {
+                    // Try relative to current directory
+                    $relativePath = __DIR__ . '/../../' . $credentialsPath; // Going up from api/ to project root
+                    if (file_exists($relativePath)) {
+                        $credentialsPath = $relativePath;
+                    } else {
+                        // Try just the temp directory from project root
+                        $altPath = __DIR__ . '/../temp/' . basename($credentialsPath);
+                        if (file_exists($altPath)) {
+                            $credentialsPath = $altPath;
+                        }
+                    }
+                }
+            }
+        }
+        
+        // Log for debugging
+        error_log("GCS BUCKET_NAME: " . $this->bucketName);
+        error_log("GCS DATA_BUCKET_NAME: " . $this->dataBucketName);
+        error_log("GCS CREDENTIALS PATH: " . ($credentialsPath ?: 'NOT SET'));
+        if ($credentialsPath) {
+            error_log("GCS CREDENTIALS PATH EXISTS: " . (file_exists($credentialsPath) ? 'YES' : 'NO'));
+        }
+        
         // Initialize the Storage client
-        if (getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
+        if ($credentialsPath && file_exists($credentialsPath)) {
             // Use service account key file
             $this->storage = new StorageClient([
-                'keyFilePath' => getenv('GOOGLE_APPLICATION_CREDENTIALS')
+                'keyFilePath' => $credentialsPath
             ]);
+            error_log("GCS Client initialized successfully with credentials file: " . $credentialsPath);
         } else {
-            // Use default credentials (for Cloud Run)
+            // Use default credentials (for Cloud Run or when service account file is not available)
             $this->storage = new StorageClient();
+            error_log("GCS Client initialized without credentials file - using default authentication");
         }
     }
     

@@ -133,8 +133,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Video endpoints
         case 'video_caption':
             $videoUrl = $_POST['video_url'];
-            $captionText = $_POST['caption_text'];
-            $result = $video->addCaption($videoUrl, $captionText);
+            
+            // Prepare options for the API request
+            $options = [];
+            if (!empty($_POST['caption_text'])) {
+                $options['captions'] = $_POST['caption_text'];
+            }
+            
+            // Add settings based on form input
+            $settings = [];
+            if (!empty($_POST['position'])) {
+                $settings['position'] = $_POST['position'];
+            }
+            if (!empty($_POST['font_size']) && is_numeric($_POST['font_size'])) {
+                $settings['font_size'] = (int)$_POST['font_size'];
+            }
+            if (!empty($_POST['font_family'])) {
+                $settings['font_family'] = $_POST['font_family'];
+            }
+            if (!empty($_POST['style'])) {
+                $settings['style'] = $_POST['style'];
+            }
+            if (!empty($_POST['line_color'])) {
+                $settings['line_color'] = $_POST['line_color'];
+            }
+            if (!empty($_POST['outline_color'])) {
+                $settings['outline_color'] = $_POST['outline_color'];
+            }
+            if (!empty($_POST['word_color'])) {
+                $settings['word_color'] = $_POST['word_color'];
+            }
+            
+            // Only add settings if we have any
+            if (!empty($settings)) {
+                $options['settings'] = $settings;
+            }
+            
+            $result = $video->addCaption($videoUrl, $options);
             break;
             
         case 'video_concatenate':

@@ -1,12 +1,33 @@
 <?php
 require_once 'config.php';
 require_once 'api/NcaApiClient.php';
+require_once 'api/LanguageManager.php';
 require_once 'api/endpoints/Audio.php';
 require_once 'api/endpoints/Image.php';
 require_once 'api/endpoints/Media.php';
 require_once 'api/endpoints/Video.php';
 require_once 'api/YouTubeDownloader.php';
 require_once 'api/GcsUploader.php';
+
+// Initialize language manager
+$languageManager = new LanguageManager();
+
+// Check if language change request
+if (isset($_GET['lang'])) {
+    $languageManager->setCurrentLanguage($_GET['lang']);
+    // Redirect to remove the lang parameter from URL
+    $redirectUrl = strtok($_SERVER['REQUEST_URI'], '?');
+    if (!empty($_GET) && count($_GET) > 1) {
+        // Remove lang parameter and rebuild query string
+        $params = $_GET;
+        unset($params['lang']);
+        if (!empty($params)) {
+            $redirectUrl .= '?' . http_build_query($params);
+        }
+    }
+    header('Location: ' . $redirectUrl);
+    exit;
+}
 
 // Initialize API client
 $apiClient = new NcaApiClient();
@@ -510,18 +531,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<?php echo $languageManager->getCurrentLanguageCode(); ?>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NCA Toolkit PHP Client</title>
+    <title><?php echo $languageManager->get('app_title'); ?></title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>NCA Toolkit PHP Client</h1>
-            <p>Access all No-Code Architects Toolkit API endpoints</p>
+            <h1><?php echo $languageManager->get('app_title'); ?></h1>
+            <p><?php echo $languageManager->get('app_description'); ?></p>
+            <div class="language-switcher">
+                <label for="language-select"><?php echo $languageManager->get('language'); ?>:</label>
+                <select id="language-select" onchange="changeLanguage(this.value)">
+                    <option value="en" <?php echo $languageManager->isCurrentLanguage('en') ? 'selected' : ''; ?>><?php echo $languageManager->get('english'); ?></option>
+                    <option value="tr" <?php echo $languageManager->isCurrentLanguage('tr') ? 'selected' : ''; ?>><?php echo $languageManager->get('turkish'); ?></option>
+                </select>
+            </div>
         </header>
         
         <main>
@@ -566,7 +594,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <!-- Loading animation -->
             <div class="loading" id="loading">
                 <div class="spinner"></div>
-                <p class="loading-text">Processing your request...</p>
+                <p class="loading-text"><?php echo $languageManager->get('processing_request'); ?></p>
             </div>
             
             <?php if ($result): ?>
@@ -691,5 +719,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
     
     <script src="js/script.js?v=1.1"></script>
+    <script>
+        function changeLanguage(lang) {
+            window.location.href = '?lang=' + lang;
+        }
+        
+        // Pass translations to JavaScript
+        <?php echo $languageManager->getJavaScriptTranslations(); ?>
+    </script>
 </body>
 </html>

@@ -38,7 +38,7 @@ class Video {
         
         // For caption requests, we might need a longer timeout
         $originalTimeout = $this->client->timeout;
-        $this->client->setTimeout(60); // 1 minute timeout
+        $this->client->setTimeout(600); // 10 minutes timeout (600 seconds)
         
         $result = $this->client->post('/v1/video/caption', $data);
         

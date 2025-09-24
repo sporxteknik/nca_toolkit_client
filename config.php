@@ -17,7 +17,7 @@ define('NCA_API_BASE_URL', getenv('NCA_API_BASE_URL') ?: '');
 define('NCA_API_KEY', getenv('NCA_API_KEY') ?: 'YOUR_API_KEY_HERE');
 
 // API timeout in seconds
-define('NCA_API_TIMEOUT', getenv('NCA_API_TIMEOUT') ?: 300);
+define('NCA_API_TIMEOUT', getenv('NCA_API_TIMEOUT') ?: 600); // 10 minutes for video processing
 
 // GCP Storage configuration
 define('GOOGLE_APPLICATION_CREDENTIALS', getenv('GOOGLE_APPLICATION_CREDENTIALS') ?: '');

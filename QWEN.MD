@@ -102,7 +102,7 @@ NCA_API_KEY=your_actual_api_key_here docker-compose up -d
 ## Environment Variables
 - `NCA_API_BASE_URL`: Base URL for the NCA Toolkit API
 - `NCA_API_KEY`: Your API key for the NCA Toolkit (required)
-- `NCA_API_TIMEOUT`: API timeout in seconds (default: 300)
+- `NCA_API_TIMEOUT`: API timeout in seconds (default: 600, recommended for video processing operations)
 - `GOOGLE_APPLICATION_CREDENTIALS`: Path to Google Cloud service account key file (optional)
 - `GCS_BUCKET_NAME`: Google Cloud Storage bucket name (default: maksimum-nca)
 
