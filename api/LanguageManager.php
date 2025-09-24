@@ -390,6 +390,7 @@ class LanguageManager {
                 'style_highlight' => 'Highlight',
                 'style_underline' => 'Underline',
                 'style_classic' => 'Classic',
+                'style_word_by_word' => 'Word by Word',
                 
                 // API Response section
                 'api_response' => 'API Response',
@@ -826,6 +827,7 @@ class LanguageManager {
                 'style_highlight' => 'Vurgu',
                 'style_underline' => 'Altı Çizili',
                 'style_classic' => 'Klasik',
+                'style_word_by_word' => 'Kelime Kelime',
                 
                 // API Response section
                 'api_response' => 'API Yanıtı',

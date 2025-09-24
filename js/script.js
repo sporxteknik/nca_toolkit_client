@@ -535,6 +535,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <option value="highlight">${translate('style_highlight')}</option>
                     <option value="underline">${translate('style_underline')}</option>
                     <option value="classic">${translate('style_classic')}</option>
+                    <option value="word_by_word">${translate('style_word_by_word')}</option>
                 </select>
             </div>
             <div class="form-group">
