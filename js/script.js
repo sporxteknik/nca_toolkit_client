@@ -93,10 +93,6 @@ document.addEventListener('DOMContentLoaded', function() {
         mediaConvertOption.value = 'media_convert_mp3';
         mediaConvertOption.textContent = translate('media_convert_mp3');
         mediaGroup.appendChild(mediaConvertOption);
-        const mediaDownloadOption = document.createElement('option');
-        mediaDownloadOption.value = 'media_download';
-        mediaDownloadOption.textContent = translate('media_download');
-        mediaGroup.appendChild(mediaDownloadOption);
         const mediaTranscribeOption = document.createElement('option');
         mediaTranscribeOption.value = 'media_transcribe';
         mediaTranscribeOption.textContent = translate('media_transcribe');
@@ -333,55 +329,7 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         `,
         
-        'media_download': `
-            <h2>${translate('media_download')}</h2>
-            <form method="post" enctype="multipart/form-data">
-            <div class="form-group">
-                <label for="url">${translate('media_url')}</label>
-                <input type="url" id="url" name="url" placeholder="${translate('media_url_placeholder')}">
-            </div>
-            <div class="form-group">
-                <label>${translate('or_upload_media_file')}</label>
-                <div class="drop-area" id="download-drop-area">
-                    <p>${translate('drag_drop_download')}</p>
-                    <input type="file" id="download_file" name="download_file" accept="audio/*,video/*" style="display: none;">
-                </div>
-                <div class="file-list" id="download-file-list"></div>
-            </div>
-            <div class="form-group">
-                <label for="cookies">${translate('cookies_optional')}</label>
-                <textarea id="cookies" name="cookies" placeholder="${translate('cookies_placeholder')}"></textarea>
-            </div>
-            <input type="hidden" name="endpoint" value="media_download">
-            <button type="submit" class="btn">${translate('download_media')}</button>
-            </form>
-            
-            <div class="doc-section">
-                <button type="button" class="doc-toggle">${translate('show_documentation')}</button>
-                <div class="doc-content hidden">
-                    <h4>${translate('about_media_download')}</h4>
-                    <p>${translate('media_download_desc')}</p>
-                    
-                    <h4>${translate('media_download_parameters')}</h4>
-                    <ul>
-                        <li><strong>${translate('media_download_url_param')}</strong>: ${translate('media_download_url_param')}</li>
-                        <li><strong>${translate('media_download_upload_param')}</strong>: ${translate('media_download_upload_param')}</li>
-                        <li><strong>${translate('media_download_cookies_param')}</strong>: ${translate('media_download_cookies_param')}</li>
-                    </ul>
-                    
-                    <h4>${translate('media_download_formats')}</h4>
-                    <p>${translate('media_download_formats_desc')}</p>
-                    
-                    <h4>${translate('media_download_tips')}</h4>
-                    <ul>
-                        <li>${translate('media_download_tips_1')}</li>
-                        <li>${translate('media_download_tips_2')}</li>
-                        <li>${translate('media_download_tips_3')}</li>
-                        <li>${translate('media_download_tips_4')}</li>
-                    </ul>
-                </div>
-            </div>
-        `,
+        
         
         'media_transcribe': `
             <h2>${translate('media_transcribe')}</h2>
@@ -410,6 +358,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     ${translate('show_direct_output')}
                 </label>
             </div>
+            <div class="form-group">
+                <label for="words_per_line">${translate('words_per_line')}</label>
+                <input type="number" id="words_per_line" name="words_per_line" min="1" placeholder="${translate('words_per_line_placeholder')}">
+                <small>${translate('words_per_line_note')}</small>
+            </div>
             <input type="hidden" name="endpoint" value="media_transcribe">
             <button type="submit" class="btn">${translate('transcribe_media')}</button>
             </form>
@@ -426,6 +379,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <li><strong>${translate('media_transcribe_upload_param')}</strong>: ${translate('media_transcribe_upload_param')}</li>
                         <li><strong>${translate('media_transcribe_srt_param')}</strong>: ${translate('media_transcribe_srt_param')}</li>
                         <li><strong>${translate('media_transcribe_output_param')}</strong>: ${translate('media_transcribe_output_param')}</li>
+                        <li><strong>${translate('words_per_line')}</strong>: ${translate('words_per_line_param')}</li>
                     </ul>
                     
                     <h4>${translate('media_transcribe_formats')}</h4>

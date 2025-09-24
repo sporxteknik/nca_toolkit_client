@@ -84,7 +84,7 @@ class Media {
      * 
      * @param string $mediaUrl URL of the media to transcribe
      * @param bool $translate Whether to translate the transcription
-     * @param array $options Additional options for transcription
+     * @param array $options Additional options for transcription (e.g., words_per_line)
      * @return array API response
      */
     public function transcribe($mediaUrl, $translate = false, $options = []) {
@@ -111,10 +111,11 @@ class Media {
      * @param string $mediaUrl URL of the media to transcribe
      * @param bool $translate Whether to translate the transcription
      * @param bool $useCloudUrl Whether to request a cloud URL for the SRT file
+     * @param array $options Additional options for transcription
      * @return array API response
      */
-    public function transcribeToSrt($mediaUrl, $translate = false, $useCloudUrl = false) {
-        $options = [
+    public function transcribeToSrt($mediaUrl, $translate = false, $useCloudUrl = false, $options = []) {
+        $defaultOptions = [
             'task' => 'transcribe',
             'include_text' => true,  // Changed to true to match working Postman request
             'include_srt' => true,
@@ -122,13 +123,16 @@ class Media {
             'word_timestamps' => false
         ];
         
+        // Merge additional options with defaults
+        $mergedOptions = array_merge($defaultOptions, $options);
+        
         // Add cloud URL option if requested
         if ($useCloudUrl) {
-            $options['response_type'] = 'cloud';
-            $options['id'] = '1';  // Add ID parameter to match working Postman request
+            $mergedOptions['response_type'] = 'cloud';
+            $mergedOptions['id'] = '1';  // Add ID parameter to match working Postman request
         }
         
-        return $this->transcribe($mediaUrl, $translate, $options);
+        return $this->transcribe($mediaUrl, $translate, $mergedOptions);
     }
     
     /**

@@ -78,6 +78,10 @@ class LanguageManager {
                 'get_segmented_srt' => 'Get segmented SRT format',
                 'show_direct_output' => 'Show direct output (uncheck to download SRT file)',
                 'transcribe_media' => 'Transcribe Media',
+                'words_per_line' => 'Words per line (optional):',
+                'words_per_line_placeholder' => 'e.g., 5',
+                'words_per_line_note' => 'Specify how many words should appear in each line of the transcript',
+                'words_per_line_param' => 'Words per line: Number of words to include per line in the transcript (optional).',
                 
                 'youtube_url' => 'YouTube URL:',
                 'youtube_url_placeholder' => 'https://www.youtube.com/watch?v=...',
@@ -510,6 +514,10 @@ class LanguageManager {
                 'get_segmented_srt' => 'Segmentli SRT formatı al',
                 'show_direct_output' => 'Doğrudan çıktıyı göster (SRT dosyasını indirmek için işareti kaldırın)',
                 'transcribe_media' => 'Medya Transkripsiyonu Yap',
+                'words_per_line' => 'Satır başına kelime (isteğe bağlı):',
+                'words_per_line_placeholder' => 'örn., 5',
+                'words_per_line_note' => 'Transkripteki her satırda kaç kelime görüneceğini belirtin',
+                'words_per_line_param' => 'Satır başına kelime: Transkripteki her satırda yer alacak kelime sayısını belirtin (isteğe bağlı).',
                 
                 'youtube_url' => 'YouTube URL\'si:',
                 'youtube_url_placeholder' => 'https://www.youtube.com/watch?v=...',

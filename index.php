@@ -312,17 +312,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $srtFormat = isset($_POST['srt_format']);
             $directOutput = isset($_POST['direct_output']);
             
+            // Get optional words_per_line parameter
+            $wordsPerLine = isset($_POST['words_per_line']) ? (int)$_POST['words_per_line'] : null;
+            
             // Store the direct output preference in a global variable so we can use it in the display section
             $GLOBALS['transcribe_direct_output'] = $directOutput;
+            
+            // Prepare options to pass to the transcribe method
+            $options = [];
+            if ($wordsPerLine !== null && $wordsPerLine > 0) {
+                $options['words_per_line'] = $wordsPerLine;
+            }
             
             if ($srtFormat) {
                 // Use the SRT transcription method without translation
                 // If user doesn't want direct output, request a cloud URL for the SRT file
                 $useCloudUrl = !$directOutput;
-                $result = $media->transcribeToSrt($mediaUrl, false, $useCloudUrl);
+                $result = $media->transcribeToSrt($mediaUrl, false, $useCloudUrl, $options);
             } else {
                 // Use the regular transcription method without translation
-                $result = $media->transcribe($mediaUrl, false);
+                $result = $media->transcribe($mediaUrl, false, $options);
             }
             break;
             
@@ -625,7 +634,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </optgroup>
                     <optgroup label="Media">
                         <option value="media_convert_mp3">Convert to MP3</option>
-                        <option value="media_download">Media Download</option>
                         <option value="media_transcribe">Media Transcribe</option>
                     </optgroup>
                     <optgroup label="YouTube">
